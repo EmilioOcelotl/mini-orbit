@@ -15,21 +15,22 @@ Para correr mini-orbit es necesario tener instalado Raspbian en una computadora 
 ### Raspbian
 
 [Distribuciones de Raspbian](https://www.raspberrypi.org/downloads/raspbian/)
+
 [Instrucciones para instalar Raspbian](https://www.raspberrypi.org/documentation/installation/installing-images/README.md)
 
 Para correr el sistema interactivo no es necesario entorno gráfico. Recomendamos utilizar la versión lite de Raspbian. 
 
 ### Compilación
 
-[Instalar SuperCollider en RPI](https://supercollider.github.io/development/building-raspberrypi)
+[Compilar SuperCollider en RPI](https://supercollider.github.io/development/building-raspberrypi)
 
-[Compilar OpenFrameworks](https://openframeworks.cc/setup/raspberrypi/raspberry-pi-getting-started/)
+[Compilar OpenFrameworks en RPI](https://openframeworks.cc/setup/raspberrypi/raspberry-pi-getting-started/)
 
 ### SC3-plugins y SCMIR
 
 [Compilar sc3-plugins](https://supercollider.github.io/development/building-raspberrypi#sc3-plugins)
 
-[Compilar SCMIR] del repositorio de Nick Collins. Atención con las instrucciones y los cambios en rutas de libgsl (https://composerprogrammer.com/code/SCMIR.zip)
+[Compilar SCMIR](https://composerprogrammer.com/code/SCMIR.zip) del repositorio de Nick Collins. Atención con las instrucciones y los cambios en rutas de libgsl.
 
 ### Addons 
 
@@ -39,7 +40,7 @@ Para correr el sistema interactivo no es necesario entorno gráfico. Recomendamo
 
 Un Kernel de Tiempo Real posibilita que el flujo de audio que se procesa en tiempo real no tenga brincos, clics o interrupciones. No es necesario pero es recomendable.
 
-[Intrucciones para compilar un Kernel de Tiempo Real en RPi](https://lemariva.com/blog/2018/07/raspberry-pi-preempt-rt-patching-tutorial-for-kernel-4-14-y)
+[Instrucciones para compilar un Kernel de Tiempo Real en RPi](https://lemariva.com/blog/2018/07/raspberry-pi-preempt-rt-patching-tutorial-for-kernel-4-14-y)
 
 ## Estructura de los archivos
 
