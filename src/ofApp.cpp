@@ -12,6 +12,8 @@ void ofApp::setup(){
   ofSetFrameRate(30);
   //ofHideCursor();
   font.load("fonts/DejaVuSansMono.ttf", 20);
+
+  sender.setup("localhost", 57120);
   
   //videoPath = ofToDataPath("video/0230.m4v", true);
   //ofLog() << "videoPath: " << videoPath;
@@ -166,6 +168,12 @@ void ofApp::keyPressed(int key){
       posZ[ofToInt(textAnalisis[1])-1] = ofToInt(textAnalisis[4]);
     }
 
+    if(textAnalisis[0] == "altamisa"){
+      	ofxOscMessage m;
+	m.setAddress("/start");
+	m.addIntArg(1);
+	sender.sendMessage(m, false);
+    }
     
     if(textAnalisis[0] == "vscale"){
       scale[ofToInt(textAnalisis[1])-1] = ofToFloat(textAnalisis[2]);

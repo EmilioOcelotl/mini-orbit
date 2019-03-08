@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxOMXPlayer.h"
+#include "ofxOsc.h"
 
 #define LIM 3
 
@@ -27,6 +28,9 @@ class ofApp : public ofBaseApp{
 		ofxOMXPlayer omxPlayer;
 		ofxOMXPlayer omxPlayer2;
 		ofxOMXPlayer omxPlayer3;
+
+		ofxOscReceiver reciever;
+		ofxOscSender sender;
 	
 		string clientTyping;
 		ofTrueTypeFont font;
