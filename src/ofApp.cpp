@@ -14,6 +14,7 @@ void ofApp::setup(){
   font.load("fonts/DejaVuSansMono.ttf", 20);
 
   sender.setup("localhost", 57120);
+  reciever.setup(5612);
   
   //videoPath = ofToDataPath("video/0230.m4v", true);
   //ofLog() << "videoPath: " << videoPath;
@@ -52,6 +53,72 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
+    while (reciever.hasWaitingMessages()){
+        
+        ofxOscMessage m;
+        reciever.getNextMessage(&m);
+
+	if (m.getAddress() == "/vload"  &&  m.getNumArgs() == 2){
+
+	  if(m.getArgAsInt(0) == 1){
+	    videoON[0]=1;
+	    videoPath[0] = ofToDataPath("video/"+m.getArgAsString(1), true);
+	    omxPlayer.loadMovie(videoPath[0]);
+	  }
+
+	  if(m.getArgAsInt(1) == 2){
+	    videoON[1] = 1;
+	    videoPath[1] = ofToDataPath("video/" + m.getArgAsString(1), true);
+	    omxPlayer2.loadMovie(videoPath[1]);
+	  }
+
+	  if(m.getArgAsInt(2) == 3){
+	    videoON[2] = 1;
+	    videoPath[2] = ofToDataPath("video/" + m.getArgAsString(1), true);
+	    omxPlayer3.loadMovie(videoPath[2]);
+	  }
+
+	}
+
+	if (m.getAddress() == "/free"  &&  m.getNumArgs() == 1){
+	  
+	  if(m.getArgAsInt(0) == 1){
+	    omxPlayer.close();
+	    videoON[0] = 0;
+	    posX[0] = 0;
+	    posY[0] = 0;
+	    scale[0] = 0;
+	  }
+	  
+	  if(m.getArgAsInt(0) == 2){
+	    omxPlayer2.close();
+	    videoON[1] = 0;
+	    posX[1] = 0;
+	    posY[1] = 0;
+	    scale[1] = 0;
+	  }
+	  
+	  if(m.getArgAsInt(0) == 3){
+	    omxPlayer2.close();
+	    videoON[2] = 0;
+	    posX[2] = 0;
+	    posY[2] = 0;
+	    scale[2] = 0;
+	  }
+	}
+
+	if (m.getAddress() == "/vpos"  &&  m.getNumArgs() == 4){
+	  posX[m.getArgAsInt(0)-1] = m.getArgAsInt(1);
+	  posY[m.getArgAsInt(0)-1] = m.getArgAsInt(2);
+	  posZ[m.getArgAsInt(0)-1] = m.getArgAsInt(3);
+	}
+
+	if (m.getAddress() == "/vscale"  &&  m.getNumArgs() == 2){
+	  scale[m.getArgAsInt(0)-1] = m.getArgAsFloat(0);
+	}
+	
+    }
+  
 }
 
 //--------------------------------------------------------------
@@ -170,7 +237,7 @@ void ofApp::keyPressed(int key){
 
     if(textAnalisis[0] == "altamisa"){
       	ofxOscMessage m;
-	m.setAddress("/start");
+	m.setAddress("/bot1");
 	m.addIntArg(1);
 	sender.sendMessage(m, false);
     }
