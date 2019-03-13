@@ -36,12 +36,6 @@ Para correr el sistema interactivo no es necesario entorno gráfico. Recomendamo
 
 [ofxOMXPlayer](https://github.com/jvcleave/ofxOMXPlayer)
 
-### Extra: Kernel de Tiempo Real
-
-Un Kernel de Tiempo Real posibilita que el flujo de audio que se procesa en tiempo real no tenga brincos, clics o interrupciones. No es necesario pero es recomendable.
-
-[Instrucciones para compilar un Kernel de Tiempo Real en RPi](https://lemariva.com/blog/2018/07/raspberry-pi-preempt-rt-patching-tutorial-for-kernel-4-14-y)
-
 ## Estructura de los archivos
 
 En la carpeta bin/data se encuentran los archivos necesarios para correr la parte de audio. No están incluídos los archivos de audio. Para utilizar otras muestras es necesario modificar las rutas en los archivos de SuperCollider que se encuentran en bin/data/sc

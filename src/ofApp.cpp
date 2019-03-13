@@ -13,7 +13,7 @@ void ofApp::setup(){
   ofSetFrameRate(30);
   //ofHideCursor();
   font.load("fonts/DejaVuSansMono.ttf", 20);
-  sender.setup("localhost", 57120);
+  sender.setup("127.0.0.1", 57120);
   reciever.setup(5612);
     ofxOMXPlayerSettings settings;
     settings.useHDMIForAudio =false;	//default true
@@ -210,4 +210,5 @@ void ofApp::keyPressed(int key){
   }
   
 }
+
 

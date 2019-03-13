@@ -49,13 +49,13 @@ s.waitForBoot{
 		wp3 = Pan2.ar(Warp1.ar(1, x1, lag * 0.125, pitch1, winsize1, -1, over1, randrat1, 4)) * amp1;
 		wp4 = (Pan2.ar(Warp1.ar(1, e, demanda2, pitch4, winsize4, -1, Lag.kr(over4, lagover4), randrat4, 4)) * amp4);
 
-		wps = wp1 + wp1b + wp2 + wp3 + wp4 + wp2b;
+		wps = wp1 + wp1b + wp2 + wp3 + wp4 + wp2b + input;
 
-		salidalim = DelayC.ar(wps*0.5, 0.01, 0.0001*0.5) * EnvFollow.ar(wps*0.5, 1 - (0.0001 * SampleRate.ir).reciprocal).max(0.134377).reciprocal * 0.5!2;
+		//salidalim = DelayC.ar(wps*0.5, 0.01, 0.0001*0.5) * EnvFollow.ar(wps*0.5, 1 - (0.0001 * SampleRate.ir).reciprocal).max(0.134377).reciprocal * 0.5!2;
 		//salidalim = Limiter.ar(wps * 2, 0.4, 0.01) * 1; /// Le trepe aquí.
-		salidag = GVerb.ar(BPF.ar(salidalim, Array.geom(8, 50, 1.5), 1/4).sum, 180, 5.85, 0.41, 0.19, 15, -3.dbamp, -5.dbamp, -7.dbamp, 180, 1) * 0.5;
-		salidamix = salidalim + salidag;
-		Out.ar(0, salidamix);
+		salidag = GVerb.ar(wps, 180, 5.85, 0.41, 0.19, 15, -3.dbamp, -5.dbamp, -7.dbamp, 180, 1) * 0.5;
+		//salidamix =  salidalim;
+		Out.ar(0, salidag + wps);
 	}).add;
 
 	//Referencia 4
@@ -258,8 +258,7 @@ s.waitForBoot{
 			"/////////////////PRIMERA/////////////////".postln;
 			"Primer momento fijo de la electrónica".postln;
 
-			~am = Synth(\altamisa, [\pos3, 0, \pitch3, 1, \winsize3, 0.2, \over3, 2, \randrat3, 0.4, \lagdur3, 4, \amp3, 0]);
-			~am = Synth(\altamisa, [\pos3b, 0, \pitch3b, 1, \winsize3b, 0.2, \over3b, 2, \randrat3b, 0.4, \lagdur3b, 4, \amp3b, 0]);
+			~am = Synth(\altamisa, [\pos3, 0, \pitch3, 1, \winsize3, 0.2, \over3, 2, \randrat3, 0.4, \lagdur3, 4, \amp3, 0, \pos3b, 0, \pitch3b, 1, \winsize3b, 0.2, \over3b, 2, \randrat3b, 0.4, \lagdur3b, 4, \amp3b, 0]);
 			~am.set( \amp3, \amp3b, 0);
 
 			0.1.wait;
@@ -575,6 +574,10 @@ s.waitForBoot{
 			~manda.sendMsg('\bot4', 0);
 			~rutacinco.play;
 			~p5.next; ~pAn5.next})}, '/bot5', recvPort: 57120);
+
+//n = NetAddr("127.0.0.1", 57120);
+//n.sendMsg("/bot1", 1);
+"leesto".postln;
 
 }
 
