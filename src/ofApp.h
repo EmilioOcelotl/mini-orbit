@@ -33,6 +33,7 @@ class ofApp : public ofBaseApp{
 		int posY[LIM];
 	        float scale[LIM];
 		int posZ[LIM];
+		float opacity;
 
 		ofEasyCam cam;
 
