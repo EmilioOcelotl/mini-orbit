@@ -31,7 +31,7 @@ void ofApp::setup(){
       posY[i] = 0;
       posZ[i] = 0;
       scale[i] = 1;
-    } 
+    }
 }
 
 //--------------------------------------------------------------
@@ -48,9 +48,7 @@ void ofApp::update(){
 	    videoPath[0] = ofToDataPath("video/"+m.getArgAsString(1), true);
 	    omxPlayer.loadMovie(videoPath[0]);
 	  }
-	  
 	  if(m.getArgAsInt(0) == 2){
-
 	    videoON[1] = 1;
 	    videoPath[1] = ofToDataPath("video/" + m.getArgAsString(1), true);
 	    omxPlayer2.loadMovie(videoPath[1]);
@@ -61,7 +59,8 @@ void ofApp::update(){
 	    omxPlayer3.loadMovie(videoPath[2]);
 	  }
 	}
-	if (m.getAddress() == "\free"  &&  m.getNumArgs() == 1){  
+
+	if (m.getAddress() == "\vfree"  &&  m.getNumArgs() == 1){  
 	  if(m.getArgAsInt(0) == 1){
 	    omxPlayer.close();
 	    videoON[0] = 0;
@@ -104,12 +103,13 @@ void ofApp::update(){
 //--------------------------------------------------------------
 // Referencia 3
 void ofApp::draw(){
+  
   ofEnableArbTex();
   ofEnableDepthTest();
   ofSetRectMode(OF_RECTMODE_CENTER);
   cam.begin();
   ofPushMatrix();
-ofSetColor(255, 255, 255, opacity);
+  ofSetColor(255, 255, 255, opacity);
   if(videoON[0] == 1){
     ofTranslate(0, 0, posZ[0]);
     omxPlayer.draw((omxPlayer.getWidth()*(scale[0]*0.25)) + posX[0], (-omxPlayer.getHeight()*(scale[0]*0.25)) + posY[0], omxPlayer.getWidth() * (scale[0] * 1.5), omxPlayer.getHeight() * (scale[0] * 1));
@@ -126,7 +126,8 @@ ofSetColor(255, 255, 255, opacity);
     ofTranslate(0, 0);
   }
   ofPopMatrix();
-  cam.end();
+  cam.end();	
+	
   ofSetColor(255, 255, 255, 255);
   ofDisableDepthTest();
   text = wrapString(clientTyping, 700);
@@ -192,6 +193,7 @@ void ofApp::keyPressed(int key){
 	posY[1] = 0;
 	scale[1] = 0;
       }
+
       if(ofToInt(textAnalisis[1])==3){
 	omxPlayer2.close();
 	videoON[2] = 0;
@@ -217,6 +219,14 @@ void ofApp::keyPressed(int key){
     if(textAnalisis[0] == "vscale"){
       scale[ofToInt(textAnalisis[1])-1] = ofToFloat(textAnalisis[2]);
     }
+        
+    if(textAnalisis[0] == "entrada"){
+      ofxOscMessage m;
+      m.setAddress("/entrada");
+      m.addFloatArg(ofToFloat(textAnalisis[1]));
+      sender.sendMessage(m, false);
+    }
+
     
     clientTyping = "";
 

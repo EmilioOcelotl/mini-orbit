@@ -8,8 +8,9 @@ s.waitForBoot{
 
 	w = PathName.new("~/Dropbox/leviathan-altamisa/audio/".standardizePath);
 	a = Array.fill(6, {arg i; Buffer.read(s, w.pathOnly++"smpls/va"++(i+4)++".aif")});
-	c =  Buffer.read(s, w.pathOnly++"smpls/GeomFinal.wav");
-	d =  Buffer.read(s, w.pathOnly++"smpls/TASCAM_0287.wav");
+	c =  Buffer.read(s, w.pathOnly++"smpls/geom.wav");
+	//d =  Buffer.read(s, w.pathOnly++"smpls/tascam1.wav");
+	d = Array.fill(4, {arg i; Buffer.read(s, w.pathOnly++"smpls/tascam"++(i+1)++".wav")});
 	e =  Buffer.alloc(s, 44100*1, 1);
 
 	// Referencia 3
@@ -54,7 +55,7 @@ s.waitForBoot{
 
 		//salidalim = DelayC.ar(wps*0.5, 0.01, 0.0001*0.5) * EnvFollow.ar(wps*0.5, 1 - (0.0001 * SampleRate.ir).reciprocal).max(0.134377).reciprocal * 0.5!2;
 		//salidalim = Limiter.ar(wps * 2, 0.4, 0.01) * 1; /// Le trepe aquí.
-		salidag = GVerb.ar(wps, 180, 5.85, 0.41, 0.19, 15, -3.dbamp, -5.dbamp, -7.dbamp, 180, 1) * 0.5;
+		salidag = GVerb.ar(wps, 180, 5.85, 0.41, 0.19, 15, -3.dbamp, -5.dbamp, -7.dbamp, 180, 1) * [0.5, 0.5, 0.5, 0.5];
 		//salidamix =  salidalim;
 		Out.ar(0, salidag + wps);
 	}).add;
@@ -190,7 +191,7 @@ s.waitForBoot{
 				//completionMessage: ["/b_free", buffer]
 			);
 		};
-		recordfn.value(25);
+		recordfn.value(20);
 	});
 
 	~pAn3 = Routine({
@@ -351,15 +352,15 @@ s.waitForBoot{
 			OSCdef(\reply, {|msg|	
 				var data = msg[3];	   
 				//msg.postln;
-				~ofx.sendMsg("\opacity", data.linlin(0.0, 1.0, 0.0, 240.0));
-				}, '/reply');
+				~ofx.sendMsg("\opacity", data.linlin(0.0, 1.0, 0.0, 230.0));
+			}, '/reply');
 
 			~ofx.sendMsg("\vload", 1, [4, 5, 6].choose.asString++".mov");
-			~ofx.sendMsg("\vpos", 1, rand(100), 100.rand2, 0);	
+			~ofx.sendMsg("\vpos", 1, rand(100), 50.rand2, 0);	
 			~ofx.sendMsg("\vload", 2, [7, 8, 9].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 2, rand(-100), 100.rand2, 0);
+			~ofx.sendMsg("\vpos", 2, rand(-100), 50.rand2, 0);
 			~ofx.sendMsg("\vload", 3, [1, 2, 3].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 100.rand2, 0);
 
 			~am.set(\amp3, 0.5, \pos3, 0.35, \lagdur3, 27, \pitch3, - 0.25, \over3, 12, \x2, a[0].bufnum, \amp2, 0.5, \pos2, 0.1, \pitch2, -1, \lagdur2, 27, \over2, 2);
 
@@ -368,15 +369,15 @@ s.waitForBoot{
 			"segundo mensaje a mini-orbit".postln; 
 
 			~ofx.sendMsg("\vload", 1, [1, 2, 3].choose.asString++".mov");
-			~ofx.sendMsg("\vpos", 1, rand(200), 100.rand2, 0);	
+			~ofx.sendMsg("\vpos", 1, rand(200), 50.rand2, 0);	
 			~ofx.sendMsg("\vload", 2, [4, 5, 6].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 2, rand(-200), 100.rand2, 0);
+			~ofx.sendMsg("\vpos", 2, rand(-200), 50.rand2, 0);
 			~ofx.sendMsg("\vload", 3, [7, 8, 9].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 3, rand(100, -100), 50.rand2, 0);
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 100.rand2, 0);
 
 			~buf1 = Buffer.read(s, w.pathOnly++"mstrs/yotraigoAltamisa.wav");
-			//~am.set(\amp3, 0, \x2, d.bufnum, \amp2, 0.9, \over2, 8, \randrat3, 0.8, \pos2, 0.5, \winsize2, 0.05, \over3, 0.5);
-			~am.set(\amp3, 0, \x2, d.bufnum, \amp2, 0.25, \winsize2, 0.5, \over2, 12, \lagdur2, 12, \pitch2, -1, \umbral, 0.25);
+			//~am.set(\amp3, 0, \x2, d[[0, 1, 2, 3].choose].bufnum, \amp2, 0.9, \over2, 8, \randrat3, 0.8, \pos2, 0.5, \winsize2, 0.05, \over3, 0.5);
+			~am.set(\amp3, 0, \x2, d[[0, 1, 2, 3].choose].bufnum, \amp2, 0.25, \winsize2, 0.5, \over2, 12, \lagdur2, 12, \pitch2, -1, \umbral, 0.25);
 
 			~am.set(\amp3b, 0, \amp3, 0);
 			"Primer segundo momento dinámico".postln;
@@ -384,14 +385,14 @@ s.waitForBoot{
 			(14.0 + 1.0.rand).wait;
 
 			~ofx.sendMsg("\vload", 1, [7, 8, 9].choose.asString++".mov");
-			~ofx.sendMsg("\vpos", 1, rand(300), 100.rand2, 0);	
+			~ofx.sendMsg("\vpos", 1, rand(300), 50.rand2, 0);	
 			~ofx.sendMsg("\vload", 2, [1, 2, 3].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 2, rand(-300), 100.rand2, 0);
+			~ofx.sendMsg("\vpos", 2, rand(-300), 50.rand2, 0);
 			~ofx.sendMsg("\vload", 3, [4, 5, 6].choose.asString++".mov");	
 			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
 
-			// ~am.set(\amp3, 0, \x2, d.bufnum, \amp2, 0.9, \over2, 2, \randrat3, 0, \pos2, 0.95, \pitch2, 1, \regulador, 2000);
-			~am.set(\amp3, 0, \x2, d.bufnum, \amp2, 0.25, \winsize2, 0.05, \over2, 14, \lagdur2, 12, \pitch2, -1, \umbral, 0.25);
+			// ~am.set(\amp3, 0, \x2, d[[0, 1, 2, 3].choose].bufnum, \amp2, 0.9, \over2, 2, \randrat3, 0, \pos2, 0.95, \pitch2, 1, \regulador, 2000);
+			~am.set(\amp3, 0, \x2, d[[0, 1, 2, 3].choose].bufnum, \amp2, 0.25, \winsize2, 0.05, \over2, 14, \lagdur2, 12, \pitch2, -1, \umbral, 0.25);
 
 			"Segundo segundo momento dinámico".postln;
 
@@ -400,11 +401,11 @@ s.waitForBoot{
 			"faltanCUATRO".postln;
 
 			~ofx.sendMsg("\vload", 1, [1, 2, 3].choose.asString++".mov");
-			~ofx.sendMsg("\vpos", 1, rand(200), 100.rand2, 0);	
+			~ofx.sendMsg("\vpos", 1, rand(300), 50.rand2, 0);	
 			~ofx.sendMsg("\vload", 2, [4, 5, 6].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 2, rand(-200), 100.rand2, 0);
+			~ofx.sendMsg("\vpos", 2, rand(-300), 50.rand2, 0);
 			~ofx.sendMsg("\vload", 3, [7, 8, 9].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 3, rand(100, -100), 50.rand2, 0);
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
 
 			1.0.wait;
 
@@ -415,11 +416,11 @@ s.waitForBoot{
 			"faltanDOS".postln;
 
 			~ofx.sendMsg("\vload", 1, [1, 2, 3].choose.asString++".mov");
-			~ofx.sendMsg("\vpos", 1, rand(200), 100.rand2, 0);	
+			~ofx.sendMsg("\vpos", 1, rand(200), 50.rand2, 0);	
 			~ofx.sendMsg("\vload", 2, [4, 5, 6].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 2, rand(-200), 100.rand2, 0);
+			~ofx.sendMsg("\vpos", 2, rand(-200), 50.rand2, 0);
 			~ofx.sendMsg("\vload", 3, [7, 8, 9].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 3, rand(100, -100), 50.rand2, 0);
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
 
 			1.0.wait;
 
@@ -428,9 +429,9 @@ s.waitForBoot{
 			1.0.wait;
 
 			~ofx.sendMsg("\vload", 1, [7, 8, 9].choose.asString++".mov");
-			~ofx.sendMsg("\vpos", 1, rand(300), 100.rand2, 0);	
+			~ofx.sendMsg("\vpos", 1, rand(100), 50.rand2, 0);	
 			~ofx.sendMsg("\vload", 2, [1, 2, 3].choose.asString++".mov");	
-			~ofx.sendMsg("\vpos", 2, rand(-300), 100.rand2, 0);
+			~ofx.sendMsg("\vpos", 2, rand(-100), 50.rand2, 0);
 			~ofx.sendMsg("\vload", 3, [4, 5, 6].choose.asString++".mov");	
 			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
 
@@ -444,7 +445,7 @@ s.waitForBoot{
 					"salio un y4".postln;
 				});
 				if(msg[1] == 5, {
-					~am.set(\x3, d.bufnum, \amp1, 0, \pos3, 0.0001, \lagdur1, 8, \pitch1, 1, \over1, 10, \x2, c.bufnum, \amp2, 0, \pos2, 0.002, \pitch2, 1, \lagdur2, 8, \over2, 0.125);
+					~am.set(\x3, d[[0, 1, 2, 3].choose].bufnum, \amp1, 0, \pos3, 0.0001, \lagdur1, 8, \pitch1, 1, \over1, 10, \x2, c.bufnum, \amp2, 0, \pos2, 0.002, \pitch2, 1, \lagdur2, 8, \over2, 0.125);
 					"salio un y5".postln;
 				});
 				if(msg[1] == 6, {
@@ -461,7 +462,15 @@ s.waitForBoot{
 			"/////////////////TERCERA/////////////////".postln;
 			"Tercer momento fijo de la electrónica".postln;
 			~manda.sendMsg('\yes', [4, 5, 6].choose);
-			~am.set(\amp3, 0.25, \pos3, 1.0.rand, \lagdur3, 23, \over3, 12, \x2, d.bufnum, \amp2, 0.4, \pitch2, -1, \lagdur2, 23, \over2, 2); // pos a ver que pasa con la pos.
+			~am.set(\amp3, 0.25, \pos3, 1.0.rand, \lagdur3, 23, \over3, 12, \x2, d[[0, 1, 2, 3].choose].bufnum, \amp2, 0.4, \pitch2, -1, \lagdur2, 23, \over2, 2); // pos a ver que pasa con la pos.
+
+			~ofx.sendMsg("\vload", 1, [10, 11, 12].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 1, rand(200), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 2, [13, 14, 15].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(-200), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 3, [16, 17, 18].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
+
 			23.0.wait;
 			"Primer tercer momento dinámico".postln; // segundo análisis?
 			~am.set(\amp3, 0, \x2, ~buf1.bufnum, \amp2, 1.5, \over3, 12, \randrat3, 0.1, \pos2, 0, \winsize2, 1);
@@ -473,6 +482,13 @@ s.waitForBoot{
 			(14.0 + 1.0.rand).wait;
 			"el solo, a ver que sale".postln; /// Este es uno de los momentos más importantes
 			~am.set(\amp3, 0, \x2, ~buf2.bufnum, \amp2, 1.5, \over3, 0.5, \randrat3, 0.2, \pos2, 0, \winsize3, 0.05);
+			~ofx.sendMsg("\vload", 3, [10, 11, 12].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 3, rand(300), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 1, [13, 14, 15].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 1, rand(-300), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 2, [16, 17, 18].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(100)-50, 50.rand2, 0);
+
 
 			10.0.wait;
 			"Segundo tercer momento dinámicO".postln;
@@ -481,6 +497,14 @@ s.waitForBoot{
 
 			10.0.wait;
 			"faltanCUATRO".postln;
+
+			~ofx.sendMsg("\vload", 2, [10, 11, 12].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 2, rand(200), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 3, [13, 14, 15].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(-200), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 1, [16, 17, 18].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 1, rand(100)-50, 50.rand2, 0);
+
 			1.0.wait;
 			"faltanTRES".postln;
 			1.0.wait;
@@ -509,19 +533,59 @@ s.waitForBoot{
 			"Cuarto momento fijo de la electrónica".postln;
 			~manda.sendMsg('\yes', [7, 8].choose);
 			~am.set(\amp3, 0.35, \pos3, 0.545, \lagdur3, 38, \over3, 12, \amp2, 0, \pos2, 0.1, \pitch2, -1, \lagdur2, 27, \over2, 2);
-			/// ~am.set(\amp3, 0.35, \pos3, 0.35, \lagdur3, 27, \over3, 12, \amp2, 0, \pos2, 0.1, \pitch2, -1, \lagdur2, 27, \over2, 2); Este es el seguro, hay que armar uno salvaje :D
-			28.0.wait; /// Creo que aquí se me fue la onda, revisar en vivo qué onda. Esto podría cambiarse, tanto en la rutina como en la partitura.
+			/// ~am.set(\amp3, 0.35, \pos3, 0.35, \lagdur3, 27, \over3, 12, \amp2, 0, \pos2, 0.1, \pitch2, -1, \lagdur2, 27, \over2, 2);
+			
+			~ofx.sendMsg("\vload", 1, [10, 11, 12].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 1, rand(200), 100.rand2, 0);	
+			~ofx.sendMsg("\vload", 2, [13, 14, 15].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(-200), 100.rand2, 0);
+			~ofx.sendMsg("\vload", 3, [16, 17, 18].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 100.rand2, 0);
+
+			28.0.wait;
 			"Primer cuarto momento dinámico".postln;
 			~am.set(\amp3, 0, \amp2, 0, \x1, ~buf3.bufnum, \amp1, 0.5, \over1, 4, \randrat1, 0.2, \pos2, 0, \winsize1, 0.05);
+			
+			~ofx.sendMsg("\vload", 3, [10, 11, 12].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 3, rand(300), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 1, [13, 14, 15].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 1, rand(-300), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 2, [16, 17, 18].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(100)-50, 50.rand2, 0);
+
 			(14.0 + 1.0.rand).wait;
 			"Segundo cuarto momento dinámico".postln;
 			~am.set(\amp3, 0, \amp2, 0, \x1, ~buf3.bufnum, \amp1, 0.5, \over1, 10, \randrat1, 0.2, \pos2, 0, \winsize1, 0.05);
 			~am.set(\amp3, 0, \amp2, 0, \x1, ~buf3.bufnum, \amp1, 0.5, \over1, 10, \randrat1, 0.2, \pos2, 0, \winsize1, 0.05);
 
+			~ofx.sendMsg("\vload", 2, [10, 11, 12].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 2, rand(200), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 3, [13, 14, 15].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(-200), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 1, [16, 17, 18].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 1, rand(100)-50, 50.rand2, 0);
+
+
 			7.5.wait;
 			"solodeCellodenuevo".postln;
+
+			~ofx.sendMsg("\vload", 1, [10, 11, 12].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 1, rand(100), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 2, [13, 14, 15].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(-100), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 3, [16, 17, 18].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
+
 			5.0.wait;
 			"faltanCUATRO".postln;
+
+			~ofx.sendMsg("\vload", 2, [10, 11, 12].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 2, rand(200), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 3, [13, 14, 15].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(-200), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 1, [16, 17, 18].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 1, rand(100)-50, 50.rand2, 0);
+
 			1.0.wait;
 			"faltanTRES".postln;
 			1.0.wait;
@@ -540,23 +604,76 @@ s.waitForBoot{
 			"/////////////////QUINTA//////////////////".postln;
 			"Quinto momento fijo de la electrónica".postln;
 			~am.set(\pos3, 0, \pitch3, 0.5, \winsize3, 0.2, \over3, 12, \randrat3, 0.2, \lagdur3, 24, \amp3, 0.5);
+
+ 			~ofx.sendMsg("\vload", 1, [19, 20, 21, 22].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 1, rand(200), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 2, [23, 24, 25, 26].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(-200), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 3, [27, 28, 29, 30].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
+
 			24.0.wait;
 			"Primer quinto momento dinámico".postln;
 			~am.set(\receloop, 1, \amp4, 0.5, \over4, 12, \randrat4, 0.6);
+
+			~ofx.sendMsg("\vload", 2, [19, 20, 21, 22].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 2, rand(300), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 3, [23, 24, 25, 26].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(-300), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 1, [27, 28, 29, 30].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 1, rand(100)-50, 50.rand2, 0);
+
 			(20.0 + 2.0.rand).wait;
 			"Segundo quinto momento dinámico".postln;
 			~am.set(\receloop, 1, \amp4, 0.5, \over4, 0.5, \randrat4, 0, \lagover4, 10);
+
+			~ofx.sendMsg("\vload", 3, [19, 20, 21, 22].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 3, rand(100), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 1, [23, 24, 25, 26].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 1, rand(-100), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 2, [27, 28, 29, 30].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(100)-50, 50.rand2, 0);
+
 			10.0.wait;
 			"solodeCompu".postln;
+
+			~ofx.sendMsg("\vload", 1, [19, 20, 21, 22].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 1, rand(200), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 2, [23, 24, 25, 26].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(-200), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 3, [27, 28, 29, 30].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
+
 			17.0.wait;
 			"faltanCUATRO".postln;
+
+			~ofx.sendMsg("\vload", 1, [19, 20, 21, 22].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 1, rand(100), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 2, [23, 24, 25, 26].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 2, rand(-100), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 3, [27, 28, 29, 30].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(100)-50, 50.rand2, 0);
+
 			1.0.wait;
 			"faltanTRES".postln;
 			1.0.wait;
+			
+			~ofx.sendMsg("\vload", 2, [19, 20, 21, 22].choose.asString++".mov");
+			~ofx.sendMsg("\vpos", 2, rand(50), 50.rand2, 0);	
+			~ofx.sendMsg("\vload", 3, [23, 24, 25, 26].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 3, rand(-50), 50.rand2, 0);
+			~ofx.sendMsg("\vload", 1, [27, 28, 29, 30].choose.asString++".mov");	
+			~ofx.sendMsg("\vpos", 1, rand(100)-50, 50.rand2, 0);
+
 			"faltanDOS".postln;
 			1.0.wait;
 			"faltaUNO____Picaleya o se pica solo".postln;
 			1.0.wait;
+			
+			~ofx.sendMsg("\vfree", 1);	
+			~ofx.sendMsg("\vfree", 2);	
+			~ofx.sendMsg("\vfree", 3);	
+
 			~am.set(\amp1, 0, \amp2, 0, \amp3, 0, \amp4, 0, \amp2b, 0, \amp3b, 0);
 			"//////////////////FIN////////////////////".postln;
 			0.5.wait;
@@ -569,8 +686,6 @@ s.waitForBoot{
 	~manda = NetAddr("127.0.0.1", 57120);
 	~ofx = NetAddr("127.0.0.1", 5612);
 
-	/// PRIMERA
-
 	~oscuno = OSCFunc({|msg|
 		if (msg[1] == 1, {
 			/// Si es uno, entonces
@@ -580,6 +695,7 @@ s.waitForBoot{
 			~manda.sendMsg('\bot5', 0);
 			~rutauno.play;
 			~p1.next; ~pAn1.next;
+			//Tdef(\cosa).play;	
 	})}, '/bot1', recvPort: 57120);
 
 	/// SEGUNDA
@@ -633,7 +749,22 @@ s.waitForBoot{
 
 //n = NetAddr("127.0.0.1", 57120);
 //n.sendMsg("/bot1", 1);
-"leesto".postln;
+"
+███╗   ███╗██╗███╗   ██╗██╗       ██████╗ ██████╗ ██████╗ ██╗████████╗    
+████╗ ████║██║████╗  ██║██║      ██╔═══██╗██╔══██╗██╔══██╗██║╚══██╔══╝    
+██╔████╔██║██║██╔██╗ ██║██║█████╗██║   ██║██████╔╝██████╔╝██║   ██║       
+██║╚██╔╝██║██║██║╚██╗██║██║╚════╝██║   ██║██╔══██╗██╔══██╗██║   ██║       
+██║ ╚═╝ ██║██║██║ ╚████║██║      ╚██████╔╝██║  ██║██████╔╝██║   ██║       
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝       ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═╝   ╚═╝       
+                                                                          
+███████╗███╗   ██╗    ███████╗███████╗██████╗ ███████╗██████╗  █████╗     
+██╔════╝████╗  ██║    ██╔════╝██╔════╝██╔══██╗██╔════╝██╔══██╗██╔══██╗    
+█████╗  ██╔██╗ ██║    █████╗  ███████╗██████╔╝█████╗  ██████╔╝███████║    
+██╔══╝  ██║╚██╗██║    ██╔══╝  ╚════██║██╔═══╝ ██╔══╝  ██╔══██╗██╔══██║    
+███████╗██║ ╚████║    ███████╗███████║██║     ███████╗██║  ██║██║  ██║    
+╚══════╝╚═╝  ╚═══╝    ╚══════╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝    
+                                                                          
+ ".postln
 
 }
 

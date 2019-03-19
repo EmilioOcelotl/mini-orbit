@@ -10,7 +10,8 @@ Mini-orbit corre en OpenFrameworks y SuperCollider.
 
 ## Instalación
 
-Para correr mini-orbit es necesario tener instalado Raspbian en una computadora Raspberry Pi. El sistema no ha sido probado en una sola computadora, así que es necesario distribuir la carga.
+Para correr mini-orbit es necesario tener instalado Raspbian en una computadora Raspberry Pi. 
+El sistema ha sido probado en una sola computadora. 
 
 ### Raspbian
 
@@ -36,7 +37,9 @@ Para correr el sistema interactivo no es necesario entorno gráfico. Recomendamo
 
 [ofxOMXPlayer](https://github.com/jvcleave/ofxOMXPlayer)
 
-## Estructura de los archivos
+## Materiales y estructura de los archivos
+
+En la carpeta bin/data/ se encuentra una liga simbólica que lleva a la carpeta video. En esta carpeta es posible colocar los videos a cargar. En el archivo de SuperCollider es posible cambiar la ruta que lleva a los archivos de audio que el sistema utilizará. Una tercera carpeta también conduce a los archivos que el sistema graba y analiza en cada ejecución. La ruta de esta carpeta se comparte con la de los archivos fijos.  
 
 En la carpeta bin/data se encuentran los archivos necesarios para correr la parte de audio. No están incluídos los archivos de audio. Para utilizar otras muestras es necesario modificar las rutas en los archivos de SuperCollider que se encuentran en bin/data/sc
 
@@ -46,3 +49,6 @@ Mini-orbit retoma de CineVivo retoma la invocación de videos y su ordentamiento
 De Orbit, utiliza un parseo sencillo para la utilización de instrucciones en pantalla. En este sentido, la RPI necesita solamente un teclado como interfaz de entrada y una pantalla o un proyector como interfaz de salida. También es posible controlar los parámetros de los elementos en el espacio a través de mensajes OSC. 
 
 La versión actual del prototipo está desarrollada en RPI y Raspbian. El audio puede correr prácticamente en cualquier plataforma que pueda ejecutar SuperCollider, sin embargo, la parte de video solamente puede correr en una Raspberry Pi. Esto debido a que una de las premisas del proyecto de investigación consistió en el desarrollo de este sistema interactivo en computadoras de placa reducida. Por otro lado, las características del hardware de la RPI posibilitan la reproducción de videos con OMXPlayer (exclusivo de RPI). Un proyecto similar con funciones extendidas que puede correr en una computadora de escritorio o laptop es Orbit.
+
+## Referencias
+
